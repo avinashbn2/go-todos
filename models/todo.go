@@ -11,6 +11,7 @@ type Todo struct {
 	Done bool
 
 }
+// Display Todos from db
 func DisplayTodos(db *bolt.DB) error {
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Todos"))
