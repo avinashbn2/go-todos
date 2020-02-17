@@ -13,7 +13,7 @@ var DB *bolt.DB
 // setup commands here
 func InitCommands(db *bolt.DB) {
 
-	todoStr := flag.String("todo", "New TODO", "Enter Todo description")
+	todoStr := flag.String("add", "New TODO", "Enter Todo description")
 	flag.Parse()
 
 	todo := models.Todo{*todoStr, false}
