@@ -1,2 +1,4 @@
+github.com/avina-sh/go-todos v0.0.0-20200218090323-e8234027d28c h1:WR/KgBn0fCM+4ZulBUCpHqs85QTHBpukTjAg1qdrlEs=
+github.com/avina-sh/go-todos v0.0.0-20200218090323-e8234027d28c/go.mod h1:uktid6KPsf81YWASRaBz1tcf+W02CvIggmMiGOQrWlA=
 github.com/boltdb/bolt v1.3.1 h1:JQmyP4ZBrce+ZQu0dY660FMfatumYDLun9hBCUVIkF4=
 github.com/boltdb/bolt v1.3.1/go.mod h1:clJnj/oiGkjum5o1McbSZDSLxVThjynRyGBgiAx27Ps=

@@ -1,8 +1,23 @@
 # go-todos
-A todo CLI developed using go 
 
-####Usage
+A todo CLI developed using go
 
-go install .
+### Installation & Usage
 
-go-todos add "todo description"
+- go install .
+
+##### Add New Todo
+
+- go-todos add "New Todo Item"
+
+##### Show all todos
+
+- go-todos show
+
+##### Show todos which are done
+
+- go-todos show --done
+
+##### Mark a todo as done
+
+- go-todos done=ID
