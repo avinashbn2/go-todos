@@ -28,14 +28,14 @@ func (s *SFlag) String() string {
 	return s.value
 }
 
-var add, show SFlag
+var add SFlag
 
 // InitCommands : setup commands here
 func InitCommands(db *bolt.DB) {
 
 	flag.Var(&add, "add", "Add new Todo")
+	// flag.Int(&done, 1,  "Mark todo as done" )
 	show := flag.Bool("show", false, "To Display Todos")
-
 	flag.Parse()
 	if add.set {
 		todo := models.Todo{Name: add.value, Done: false}
@@ -46,18 +46,6 @@ func InitCommands(db *bolt.DB) {
 
 	}
 
-	// displayStr := flag.String("show", "", "Display all todos")
-	// flag.Parse()
-	// switch {
-	// case *todoStr != "":
-	// 	todo := models.Todo{Name: *todoStr, Done: false}
-	// 	addTodo(todo, db)
-	// 	models.DisplayTodos(db)
-
-	// case *displayStr != "":
-	// 	models.DisplayTodos(db)
-
-	// }
 }
 func addTodo(todo models.Todo, db *bolt.DB) {
 	err := todo.Save(db)

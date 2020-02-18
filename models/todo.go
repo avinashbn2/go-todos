@@ -1,16 +1,19 @@
 package models
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
+
 	"github.com/boltdb/bolt"
 )
 
 type Todo struct {
+	Id   int
 	Name string
 	Done bool
-
 }
+
 // Display Todos from db
 func DisplayTodos(db *bolt.DB) error {
 	err := db.View(func(tx *bolt.Tx) error {
@@ -24,6 +27,8 @@ func DisplayTodos(db *bolt.DB) error {
 	})
 	return err
 }
+
+// Save : function to save todoitem to DB
 func (todo *Todo) Save(db *bolt.DB) error {
 	fmt.Println("SAVE")
 
@@ -38,7 +43,14 @@ func (todo *Todo) Save(db *bolt.DB) error {
 		if err != nil {
 			return err
 		}
-		return b.Put([]byte(todo.Name), encoded)
+		id, _ := b.NextSequence()
+		todo.Id = int(id)
+		return b.Put(itob(todo.Id), encoded)
 	})
 	return err
+}
+func itob(v int) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, uint64(v))
+	return b
 }
