@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/avina-sh/go-todos/models"
 	"github.com/boltdb/bolt"
@@ -33,18 +34,35 @@ var add SFlag
 // InitCommands : setup commands here
 func InitCommands(db *bolt.DB) {
 
+	showCmd := flag.NewFlagSet("show", flag.ExitOnError)
+
 	flag.Var(&add, "add", "Add new Todo")
 	done := flag.Int("done", -1, "Mark todo as done")
-	show := flag.Bool("show", false, "To Display Todos")
+	showDone := showCmd.Bool("done", false, "To Display Todos")
+	// showAll := showCmd.Bool("all", false, "To Display Todos")
 	flag.Parse()
+
+	switch os.Args[1] {
+	case "show":
+		showCmd.Parse(os.Args[2:])
+	}
+
 	if add.set {
 		todo := models.Todo{Name: add.value, Done: false}
 		addTodo(todo, db)
 	}
-	if *show {
-		models.DisplayTodos(db)
+	if os.Args[1] == "show" {
+		if *showDone {
+			models.DisplayTodos(db, true)
+		} else {
+			models.DisplayTodos(db, false)
+
+		}
 
 	}
+	// if *showDone {
+	// 	models.DisplayTodos(db)
+	// }
 	if *done != -1 {
 		models.Done(db, *done)
 	}

@@ -8,20 +8,31 @@ import (
 	"github.com/boltdb/bolt"
 )
 
+// Todo struct for storing todo data
 type Todo struct {
-	Id   int    `json:id`
-	Name string `json:name`
-	Done bool   `json:done`
+	ID   int
+	Name string
+	Done bool
 }
 
 // DisplayTodos from db
-func DisplayTodos(db *bolt.DB) error {
+func DisplayTodos(db *bolt.DB, done bool) error {
 
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Todos"))
-
+		// todos := []*Todo{}
 		b.ForEach(func(k, v []byte) error {
-			fmt.Println(string(k), string(v))
+			temp := &Todo{}
+			json.Unmarshal(v, temp)
+			if done {
+				if temp.Done {
+					fmt.Println(string(v))
+				}
+			} else {
+				fmt.Println(string(v))
+
+			}
+
 			return nil
 		})
 		return nil
@@ -29,6 +40,7 @@ func DisplayTodos(db *bolt.DB) error {
 	return err
 }
 
+// Done : function to update a Todo as done
 func Done(db *bolt.DB, done int) error {
 	err := db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists([]byte("Todos"))
@@ -50,7 +62,7 @@ func Done(db *bolt.DB, done int) error {
 		if err != nil {
 			return err
 		}
-		return b.Put(itob(todo.Id), encoded)
+		return b.Put(itob(todo.ID), encoded)
 
 	})
 
@@ -69,13 +81,13 @@ func (todo *Todo) Save(db *bolt.DB) error {
 		bT := tx.Bucket([]byte("Todos"))
 		id, _ := bT.NextSequence()
 
-		todo.Id = int(id)
+		todo.ID = int(id)
 
 		encoded, err := json.Marshal(todo)
 		if err != nil {
 			return err
 		}
-		return bT.Put(itob(todo.Id), encoded)
+		return bT.Put(itob(todo.ID), encoded)
 	})
 	return err
 }
