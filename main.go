@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/avina-sh/go-todos/models"
 	"github.com/boltdb/bolt"
 )
+
 // Global slice to store todos
 var todos = []models.Todo{}
 
-var DB *bolt.DB
 // setup commands here
 func InitCommands(db *bolt.DB) {
 
@@ -17,19 +18,25 @@ func InitCommands(db *bolt.DB) {
 	flag.Parse()
 
 	todo := models.Todo{*todoStr, false}
-	err := todo.Save(db)
-	if err!=nil {fmt.Println(err)}
-	todos = append(todos, todo)
+	addTodo(todo, db)
 	models.DisplayTodos(db)
 }
-func setUpDB() (*bolt.DB, error){
+func addTodo(todo models.Todo, db *bolt.DB) {
+	err := todo.Save(db)
+	if err != nil {
+		fmt.Println(err)
+	}
+	todos = append(todos, todo)
+
+}
+func setUpDB() (*bolt.DB, error) {
 	db, err := bolt.Open("todos.db", 0600, nil)
-	if err!=nil {
+	if err != nil {
 		return nil, fmt.Errorf("Failed to connect to db %v", err)
 	}
-	err = db.Update( func(tx *bolt.Tx) error {
-		_, err:= tx.CreateBucketIfNotExists([]byte("Todos"))
-		if err!= nil{
+	err = db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("Todos"))
+		if err != nil {
 			return fmt.Errorf("failed to create bucket %v", err)
 
 		}
@@ -40,11 +47,10 @@ func setUpDB() (*bolt.DB, error){
 }
 func main() {
 	db, err := setUpDB()
-	if err!=nil {
+	if err != nil {
 		fmt.Println(err)
 	}
-	defer  db.Close()
+	defer db.Close()
 	InitCommands(db)
-
 
 }
