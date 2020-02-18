@@ -19,8 +19,8 @@ type SFlag struct {
 
 // Set : Set value for the flag, (implments Flag interface)
 func (s *SFlag) Set(x string) error {
-	fmt.Println(x)
 	s.set = true
+
 	s.value = x
 	return nil
 }
@@ -34,7 +34,7 @@ var add SFlag
 func InitCommands(db *bolt.DB) {
 
 	flag.Var(&add, "add", "Add new Todo")
-	// flag.Int(&done, 1,  "Mark todo as done" )
+	done := flag.Int("done", -1, "Mark todo as done")
 	show := flag.Bool("show", false, "To Display Todos")
 	flag.Parse()
 	if add.set {
@@ -44,6 +44,9 @@ func InitCommands(db *bolt.DB) {
 	if *show {
 		models.DisplayTodos(db)
 
+	}
+	if *done != -1 {
+		models.Done(db, *done)
 	}
 
 }
