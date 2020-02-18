@@ -2,9 +2,11 @@
 
 A Simple todo CLI developed using go
 
-### Installation & Usage
+### Installation
 
 - go install .
+
+### Usage
 
 ##### Add New Todo
 
