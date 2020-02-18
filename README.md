@@ -1,6 +1,6 @@
 # go-todos
 
-A todo CLI developed using go
+A Simple todo CLI developed using go
 
 ### Installation & Usage
 
