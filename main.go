@@ -11,15 +11,53 @@ import (
 // Global slice to store todos
 var todos = []models.Todo{}
 
-// setup commands here
+// SFlag : Flag type to indicate if its value is set, to distinguish different flags
+type SFlag struct {
+	set   bool
+	value string
+}
+
+// Set : Set value for the flag, (implments Flag interface)
+func (s *SFlag) Set(x string) error {
+	fmt.Println(x)
+	s.set = true
+	s.value = x
+	return nil
+}
+func (s *SFlag) String() string {
+	return s.value
+}
+
+var add, show SFlag
+
+// InitCommands : setup commands here
 func InitCommands(db *bolt.DB) {
 
-	todoStr := flag.String("add", "New TODO", "Enter Todo description")
-	flag.Parse()
+	flag.Var(&add, "add", "Add new Todo")
+	show := flag.Bool("show", false, "To Display Todos")
 
-	todo := models.Todo{*todoStr, false}
-	addTodo(todo, db)
-	models.DisplayTodos(db)
+	flag.Parse()
+	if add.set {
+		todo := models.Todo{Name: add.value, Done: false}
+		addTodo(todo, db)
+	}
+	if *show {
+		models.DisplayTodos(db)
+
+	}
+
+	// displayStr := flag.String("show", "", "Display all todos")
+	// flag.Parse()
+	// switch {
+	// case *todoStr != "":
+	// 	todo := models.Todo{Name: *todoStr, Done: false}
+	// 	addTodo(todo, db)
+	// 	models.DisplayTodos(db)
+
+	// case *displayStr != "":
+	// 	models.DisplayTodos(db)
+
+	// }
 }
 func addTodo(todo models.Todo, db *bolt.DB) {
 	err := todo.Save(db)
